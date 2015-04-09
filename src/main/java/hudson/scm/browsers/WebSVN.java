@@ -98,9 +98,10 @@ public class WebSVN extends SubversionRepositoryBrowser {
 
         int r = path.getLogEntry().getRevision();
 
-        return new URL(url,
-                       trimHeadSlash(path.getValue()) +
-                       param().add("op=diff").add("rev=" + r));
+        // /websvn/comp.php?repname=New+APV+Repository+Project&compare[]=%2F@923&compare[]=%2F@924
+        return new URL(url, "comp.php" + 
+                       param().add("compare[]=%2F@" + (r-1)).add("compare[]=%2F@" + r));
+        
     }
 
     /**
@@ -113,7 +114,11 @@ public class WebSVN extends SubversionRepositoryBrowser {
      * @throws  IOException  DOCUMENT ME!
      */
     @Override public URL getFileLink(Path path) throws IOException {
-        return new URL(url, trimHeadSlash(path.getValue()) + param());
+        // /websvn/filedetails.php?repname=New+APV+Repository+Project
+        // &path=%2Fbranches%2Frel_apv_8_6%2Fusr%2Fclick%2Fwebui%2Fconf%2Fhttpd.conf&rev=924
+        int r = path.getLogEntry().getRevision();
+        String encode_path = java.net.URLEncoder.encode(path.getValue(), "UTF-8");
+        return new URL(url, "filedetails.php" + param().add("path=" + encode_path).add("rev=" + r));
     }
 
     /**
@@ -127,9 +132,8 @@ public class WebSVN extends SubversionRepositoryBrowser {
      */
     @Override public URL getChangeSetLink(SubversionChangeLogSet.LogEntry changeSet)
                                    throws IOException {
-        return new URL(url,
-                       "." +
-                       param().add("rev=" + changeSet.getRevision()).add("sc=1"));
+        // /websvn/revision.php?repname=New+APV+Repository+Project&rev=924
+        return new URL(url, "revision.php" + param().add("rev=" + changeSet.getRevision()));
     }
 
     private QueryBuilder param() {

@@ -67,6 +67,7 @@ THE SOFTWARE.
   <properties>
     <maven-hpi-plugin.version>1.96</maven-hpi-plugin.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <concurrency>1</concurrency> <!-- may use e.g. 2C for 2 × (number of cores) -->
   </properties>
 
   <repositories>
